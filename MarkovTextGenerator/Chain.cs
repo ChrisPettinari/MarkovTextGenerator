@@ -103,7 +103,7 @@ namespace MarkovTextGenerator
                     
                 }
             }
-            return null;
+            return " ";
         }
 
         public void UpdateProbabilities ()
