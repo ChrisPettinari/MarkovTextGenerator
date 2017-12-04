@@ -39,7 +39,16 @@ namespace MarkovTextGenerator
         public void AddString (String sentence)
         {
             // TODO: Break sentence up into word pairs
+            sentence = new string(sentence.Where(c => !char.IsPunctuation(c)).ToArray());
+
+            String[] words = sentence.Split(' ', '!', '?', '.', ':');
             // TODO: Add each word pair to the chain
+            for(int i = 0; i < words.Length-1; i++)
+            {
+                AddPair(words[i], words[i + 1]);
+            }
+            AddPair(words[words.Length - 1], "");
+
         }
 
         // Adds a pair of words to the chain that will appear in order
@@ -77,12 +86,24 @@ namespace MarkovTextGenerator
         {
             if (words.ContainsKey(word))
             {
-                double choice = 1.0 / (double)rand.Next(100000);
+                double choice = rand.NextDouble(); 
 
-                Console.WriteLine("I picked the number " + choice); 
+                //Console.WriteLine("I picked the number " + choice);
+                
+                List<Word> poss = words[word];
+
+                double sums = 0;
+
+                foreach (Word p in poss )
+                {
+                    sums += p.Probability;
+
+                    if(sums > choice)
+                        return p.ToString();
+                    
+                }
             }
-
-            return "idkbbq";
+            return null;
         }
 
         public void UpdateProbabilities ()
